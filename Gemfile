@@ -25,6 +25,10 @@ gem 'bootsnap', '>= 1.1.0', require: false
 
 gem "active_model_serializers", require: true
 
+# Pagination in headers
+gem 'api-pagination'
+gem 'will_paginate'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -32,6 +36,7 @@ group :development, :test do
   gem 'rspec_junit_formatter'
   gem 'factory_bot_rails'
   gem 'shoulda-matchers'
+  gem 'json_spec'
 end
 
 group :development do
