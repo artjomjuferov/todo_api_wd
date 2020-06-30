@@ -4,6 +4,7 @@ class Api::V1::TasksController < ApplicationController
   INDEX_PER_PAGE = 10
 
   def index
+    # With_tags is out of the task scope, but I implemented it and decided to keep
     tasks = Task.with_tags(tags_param).order(created_at: :desc)
     paginate json: tasks,
              per_page: INDEX_PER_PAGE,

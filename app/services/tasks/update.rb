@@ -1,5 +1,10 @@
-# Service object which updates title of the task and
-# adds provided tags if it does not exist it will create it
+# Service object which updates title of the task and adds provided tags.
+# If provided tag does not exist it will create it.
+#
+# Service is supposed to be:
+#   1. initialized
+#   2. called with `call` method
+#   3. and checked if it's valid?
 class Tasks::Update
   MAX_TAGS = 100
 
