@@ -1,24 +1,28 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### System
+* Ruby version - `ruby 2.6.5p114 (2019-10-01 revision 67812) [x86_64-linux]``
 
-Things you may want to cover:
+* Rails version - `Rails 5.2.4.1`
 
-* Ruby version
+### Installation
 
-* System dependencies
+```
+bundle install
+rails db:migrate
+```
 
-* Configuration
+### Run server
 
-* Database creation
+```
+rails s
+```
 
-* Database initialization
+### Running tests locally
 
-* How to run the test suite
+```
+RAILS_ENV=test bundle exec rails db:migrate
+bundle exec rspec
+```
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Note: specs are not executable on hackerrank, but Raimonds said that it is not necessary to have it green there

@@ -1,6 +1,16 @@
 class Api::V1::TagsController < ApplicationController
   before_action :set_tag, only: %i[update]
 
+    INDEX_PER_PAGE = 10
+
+    def index
+      tags = Tag.order(created_at: :desc)
+      paginate json: tags,
+               per_page: INDEX_PER_PAGE,
+               status: :ok,
+               include: 'tasks'
+    end
+
   def create
     tag = Tag.create(title: params[:title])
 
