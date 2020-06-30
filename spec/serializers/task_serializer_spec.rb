@@ -3,11 +3,11 @@ require 'rails_helper'
 RSpec.describe TaskSerializer, type: :serializer do
   subject { TaskSerializer.new(task).to_json }
 
-  let(:tag) { build_stubbed(:tag, name: 'Bar') }
+  let(:tag) { build_stubbed(:tag, title: 'Bar') }
   let(:task) { build_stubbed(:task, title: 'Foo', tags: [tag]) }
 
   specify do
-    names = %({"title":"Foo", "tags":[{"name":"Bar"}]})
+    names = %({"title":"Foo", "tags":[{"title":"Bar"}]})
     is_expected.to be_json_eql(names)
 
     is_expected.to have_json_path('id')

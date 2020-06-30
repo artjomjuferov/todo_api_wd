@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :tag do
-    sequence(:name) { |n| "Name #{n}" }
+    sequence(:title) { |n| "Title #{n}" }
   end
 end
