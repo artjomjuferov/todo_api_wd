@@ -39,28 +39,33 @@ RSpec.describe 'Todos Index', type: :request do
         stub_const('Api::V1::TasksController::INDEX_PER_PAGE', 1)
       end
 
-      context 'when first page' do
-        it 'shows only first page tasks' do
-          get '/api/v1/tasks'
+      it 'shows right task on each page' do
+        get '/api/v1/tasks'
 
-          expect(response.status).to eq(200)
+        expect(response.status).to eq(200)
+        expect(response.body).to be_json_eql(%({"title": "Do Homework"})).at_path('data/0/attributes')
 
-          expect(response.body).to be_json_eql(%({"title": "Do Homework"})).at_path('data/0/attributes')
-        end
-      end
+        get '/api/v1/tasks',  params: { page: 2 }
 
-      context 'when second page' do
-        it 'shows only second page tasks' do
-          get '/api/v1/tasks',  params: { page: 2 }
-
-          expect(response.status).to eq(200)
-
-          expect(response.body).to be_json_eql(%({"title": "Wash Laundry"})).at_path('data/0/attributes')
-        end
+        expect(response.status).to eq(200)
+        expect(response.body).to be_json_eql(%({"title": "Wash Laundry"})).at_path('data/0/attributes')
       end
     end
   end
 
   context 'with applied tags as a filter' do
+    let(:urgent_tag) { create(:tag, title: 'Urgent') }
+    let(:mom_tag) { create(:tag, title: 'Mom Asked') }
+
+    let!(:task_laundry) { create(:task, title: 'Wash Laundry', tags: [mom_tag]) }
+    let!(:task_homework) { create(:task, title: 'Do Homework', tags: [urgent_tag]) }
+
+    it 'shows tags with provided tags only' do
+      get '/api/v1/tasks',  params: { tags: ['Urgent'] }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_json_size(1).at_path('data')
+      expect(response.body).to be_json_eql(%({"title": "Do Homework"})).at_path('data/0/attributes')
+    end
   end
 end

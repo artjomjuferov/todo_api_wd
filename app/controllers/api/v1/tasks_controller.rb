@@ -4,7 +4,7 @@ class Api::V1::TasksController < ApplicationController
   INDEX_PER_PAGE = 10
 
   def index
-    tasks = Task.order(created_at: :desc)
+    tasks = Task.with_tags(params[:tags]).order(created_at: :desc)
     paginate json: tasks,
              per_page: INDEX_PER_PAGE,
              status: :ok,
