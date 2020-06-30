@@ -16,8 +16,21 @@ RSpec.describe 'Update Task', type: :request do
     end
   end
 
-  context 'when valid title is provided' do
+  context 'when invalid title is provided' do
+    let(:new_title) { '' }
+
     it 'returns error' do
+      expect { patch "/api/v1/tasks/#{task.id}", params: {title: new_title} }
+        .not_to change{ task.reload.title }
+
+      expect(response.status).to eq(422)
+
+      expect(response.body).to be_json_eql(%({"errors": ["Title can't be blank"]}))
+    end
+  end
+
+  context 'when valid title is provided' do
+    it 'updates title' do
       expect { patch "/api/v1/tasks/#{task.id}", params: {title: new_title} }
         .to change{ task.reload.title }.from('Do Homework').to(new_title)
 
@@ -32,5 +45,18 @@ RSpec.describe 'Update Task', type: :request do
   end
 
   context 'when valid title and proper tag are provided' do
+    it 'updates title and adds new tags' do
+      expect { patch "/api/v1/tasks/#{task.id}", params: {title: new_title, tags: %w[Urgent Home]} }
+        .to change{ task.reload.title }.from('Do Homework').to(new_title)
+        .and change{ task.reload.tags.map(&:title).sort }.from([]).to(%w[Home Urgent])
+
+      expect(response.status).to eq(200)
+
+      expect(response.body).to be_json_eql(%({"title": "Updated Task Title"})).at_path('data/attributes')
+
+      expect(response.body).to have_json_path('data/id')
+      expect(response.body).to have_json_path('data/type')
+      expect(response.body).to have_json_path('data/relationships/tags')
+    end
   end
 end

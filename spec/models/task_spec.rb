@@ -37,6 +37,5 @@ RSpec.describe Task, type: :model do
       let(:titles) { %w[Home Urgent] }
       it { is_expected.to include(task, second_task) }
     end
-
   end
 end

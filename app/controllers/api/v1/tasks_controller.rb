@@ -22,10 +22,13 @@ class Api::V1::TasksController < ApplicationController
   end
 
   def update
-    @task.update(title: params[:title])
+    task_update = Tasks::Update.new(@task, params)
+    task_update.call
 
-    if @task.valid?
-      render json: @task, serializer: TaskSerializer, status: :ok
+    if task_update.valid?
+      render json: task_update.task, serializer: TaskSerializer, status: :ok
+    else
+      render json: {errors: task_update.errors}, status: 	:unprocessable_entity
     end
   end
 
