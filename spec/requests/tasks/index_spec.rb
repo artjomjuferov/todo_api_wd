@@ -12,8 +12,14 @@ RSpec.describe 'Todos Index', type: :request do
 
       expect(response.body).to be_json_eql(%({"title": "Wash laundry"})).at_path('data/0/attributes')
 
-      expect(response.body).to have_json_path('data/0/id/')
+      expect(response.body).to have_json_path('data/0/id')
       expect(response.body).to have_json_path('data/0/relationships/tags/data')
     end
+  end
+
+  context 'with pagination' do
+  end
+
+  context 'with applied tags as a filter' do
   end
 end

@@ -6,13 +6,14 @@ RSpec.describe 'Create Task', type: :request do
     let(:title) { 'Do Homework' }
 
     it 'creates tasks' do
-      expect { post '/api/v1/tasks', params: {title: title} }.to change(Task, :count).by(1)
+      expect { post '/api/v1/tasks', params: {title: title} }
+        .to change(Task, :count).by(1)
 
       expect(response.status).to eq(201)
 
       expect(response.body).to be_json_eql(%({"title": "Do Homework"})).at_path('data/attributes')
 
-      expect(response.body).to have_json_path('data/id/')
+      expect(response.body).to have_json_path('data/id')
       expect(response.body).to have_json_path('data/type')
       expect(response.body).to have_json_path('data/relationships/tags')
     end
@@ -22,7 +23,8 @@ RSpec.describe 'Create Task', type: :request do
     let(:title) { '' }
 
     it 'it does not create a task' do
-      expect { post '/api/v1/tasks', params: {title: title} }.not_to change(Task, :count)
+      expect { post '/api/v1/tasks', params: {title: title} }
+        .not_to change(Task, :count)
 
       expect(response.status).to eq(422)
 
