@@ -5,9 +5,13 @@ RSpec.describe 'Update Task', type: :request do
 
   let(:new_title) { 'Updated Task Title' }
 
+  let(:params) do
+    { data: { attributes: { title: new_title } } }
+  end
+
   context 'when task is not found' do
     it 'returns error' do
-      expect { patch '/api/v1/tasks/-1', params: {title: new_title} }
+      expect { patch '/api/v1/tasks/-1', params: params }
         .not_to change { task.reload.title }
 
       expect(response.status).to eq(404)
@@ -20,7 +24,7 @@ RSpec.describe 'Update Task', type: :request do
     let(:new_title) { '' }
 
     it 'returns error' do
-      expect { patch "/api/v1/tasks/#{task.id}", params: {title: new_title} }
+      expect { patch "/api/v1/tasks/#{task.id}", params: params }
         .not_to change{ task.reload.title }
 
       expect(response.status).to eq(422)
@@ -31,7 +35,7 @@ RSpec.describe 'Update Task', type: :request do
 
   context 'when valid title is provided' do
     it 'updates title' do
-      expect { patch "/api/v1/tasks/#{task.id}", params: {title: new_title} }
+      expect { patch "/api/v1/tasks/#{task.id}", params: params }
         .to change{ task.reload.title }.from('Do Homework').to(new_title)
 
       expect(response.status).to eq(200)
@@ -45,8 +49,12 @@ RSpec.describe 'Update Task', type: :request do
   end
 
   context 'when valid title and proper tag are provided' do
+    let(:params) do
+      { data: { attributes: { title: new_title, tags: %w[Urgent Home]} } }
+    end
+
     it 'updates title and adds new tags' do
-      expect { patch "/api/v1/tasks/#{task.id}", params: {title: new_title, tags: %w[Urgent Home]} }
+      expect { patch "/api/v1/tasks/#{task.id}", params: params }
         .to change{ task.reload.title }.from('Do Homework').to(new_title)
         .and change{ task.reload.tags.map(&:title).sort }.from([]).to(%w[Home Urgent])
 

@@ -4,7 +4,7 @@ class Api::V1::TasksController < ApplicationController
   INDEX_PER_PAGE = 10
 
   def index
-    tasks = Task.with_tags(params[:tags]).order(created_at: :desc)
+    tasks = Task.with_tags(tags_param).order(created_at: :desc)
     paginate json: tasks,
              per_page: INDEX_PER_PAGE,
              status: :ok,
@@ -12,7 +12,7 @@ class Api::V1::TasksController < ApplicationController
   end
 
   def create
-    task = Task.create(title: params[:title])
+    task = Task.create(title: title_param)
 
     if task.valid?
       render json: task, serializer: TaskSerializer, status: :created
@@ -22,7 +22,7 @@ class Api::V1::TasksController < ApplicationController
   end
 
   def update
-    task_update = Tasks::Update.new(@task, params)
+    task_update = Tasks::Update.new(@task, title_param, tags_param)
     task_update.call
 
     if task_update.valid?
@@ -33,6 +33,10 @@ class Api::V1::TasksController < ApplicationController
   end
 
   private
+
+  def tags_param
+    params.dig(:data, :attributes, :tags)
+  end
 
   def set_task
     @task = Task.find(params[:id])

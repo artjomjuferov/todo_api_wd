@@ -1,12 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe 'Create Task', type: :request do
+  let(:params) do
+    { data: { attributes: { title: title } } }
+  end
 
   context 'when valid title is provided' do
     let(:title) { 'Do Homework' }
 
     it 'creates task' do
-      expect { post '/api/v1/tasks', params: {title: title} }
+      expect { post '/api/v1/tasks', params: params }
         .to change(Task, :count).by(1)
 
       expect(response.status).to eq(201)
@@ -23,7 +26,7 @@ RSpec.describe 'Create Task', type: :request do
     let(:title) { '' }
 
     it 'it does not create task' do
-      expect { post '/api/v1/tasks', params: {title: title} }
+      expect { post '/api/v1/tasks', params: params }
         .not_to change(Task, :count)
 
       expect(response.status).to eq(422)

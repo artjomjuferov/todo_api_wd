@@ -3,11 +3,15 @@ require 'rails_helper'
 RSpec.describe 'Update Task', type: :request do
   let!(:tag) { create(:tag, title: 'Do Homework') }
 
+  let(:params) do
+    { data: { attributes: { title: new_title } } }
+  end
+
   let(:new_title) { 'Updated Task Title' }
 
   context 'when task is not found' do
     it 'returns error' do
-      expect { patch '/api/v1/tags/-1', params: {title: new_title} }
+      expect { patch '/api/v1/tags/-1', params: params }
         .not_to change { tag.reload.title }
 
       expect(response.status).to eq(404)
@@ -20,7 +24,7 @@ RSpec.describe 'Update Task', type: :request do
     let(:new_title) { '' }
 
     it 'returns error' do
-      expect { patch "/api/v1/tags/#{tag.id}", params: {title: new_title} }
+      expect { patch "/api/v1/tags/#{tag.id}", params: params }
         .not_to change{ tag.reload.title }
 
       expect(response.status).to eq(422)
@@ -31,7 +35,7 @@ RSpec.describe 'Update Task', type: :request do
 
   context 'when valid title is provided' do
     it 'updates title' do
-      expect { patch "/api/v1/tags/#{tag.id}", params: {title: new_title} }
+      expect { patch "/api/v1/tags/#{tag.id}", params: params }
         .to change{ tag.reload.title }.from('Do Homework').to(new_title)
 
       expect(response.status).to eq(200)

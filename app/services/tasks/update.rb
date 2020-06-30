@@ -5,10 +5,10 @@ class Tasks::Update
 
   attr_reader :task, :errors
 
-  def initialize(task, params)
+  def initialize(task, new_title, tag_titles)
     @task = task
-    @params = params
-    @tag_titles = Array(@params[:tags]).compact.uniq
+    @new_title = new_title
+    @tag_titles = Array(tag_titles).compact.uniq
     @errors = []
   end
 
@@ -32,7 +32,7 @@ class Tasks::Update
   end
 
   def update_title
-    @task.update(title: @params[:title])
+    @task.update(title: @new_title)
     @errors = @task.errors.full_messages unless @task.valid?
   end
 

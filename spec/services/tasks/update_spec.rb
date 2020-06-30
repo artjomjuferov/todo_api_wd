@@ -2,18 +2,14 @@ require 'rails_helper'
 
 RSpec.describe Tasks::Update do
 
-  subject { described_class.new(task, params) }
+  subject { described_class.new(task, new_title, tag_titles) }
 
   let!(:task) { create(:task, title: 'Do Homework') }
   let(:new_title) { 'Laundry' }
+  let(:tag_titles) { %w[Home Urgent] }
 
   context 'when task empty title is provided' do
-    let(:params) do
-      {
-        title: '',
-        tags: ['Home']
-      }
-    end
+    let(:new_title) { '' }
 
     it 'does not update titles' do
       expect { subject.call }.not_to change { task.reload.title }
@@ -24,13 +20,6 @@ RSpec.describe Tasks::Update do
   end
 
   context 'when there are too much tags provided' do
-    let(:params) do
-      {
-        title: new_title,
-        tags: %w[Home Urgent]
-      }
-    end
-
     it 'does not update titles' do
       stub_const('Tasks::Update::MAX_TAGS', 1)
 
@@ -43,12 +32,6 @@ RSpec.describe Tasks::Update do
   end
 
   context 'when provided proper tags and proper title' do
-    let(:params) do
-      {
-        title: new_title,
-        tags: %w[Home Urgent]
-      }
-    end
     let!(:home_tag) { create(:tag, title: 'Home', tasks: [task]) }
 
     it 'updates title and adds new tags' do

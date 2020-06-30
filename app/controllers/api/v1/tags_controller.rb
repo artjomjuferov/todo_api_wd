@@ -12,7 +12,7 @@ class Api::V1::TagsController < ApplicationController
     end
 
   def create
-    tag = Tag.create(title: params[:title])
+    tag = Tag.create(title: title_param)
 
     if tag.valid?
       render json: tag, serializer: TagSerializer, status: :created
@@ -22,7 +22,7 @@ class Api::V1::TagsController < ApplicationController
   end
 
   def update
-    @tag.update(title: params[:title])
+    @tag.update(title: title_param)
 
     if @tag.valid?
       render json: @tag, serializer: TagSerializer, status: :ok

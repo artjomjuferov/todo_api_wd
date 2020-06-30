@@ -1,12 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe 'Create Tag', type: :request do
+  let(:params) do
+    { data: { attributes: { title: title } } }
+  end
 
   context 'when valid title is provided' do
     let(:title) { 'Someday' }
 
     it 'creates tag' do
-      expect { post '/api/v1/tags', params: {title: title} }
+      expect { post '/api/v1/tags', params: params }
         .to change(Tag, :count).by(1)
 
       expect(response.status).to eq(201)
@@ -23,7 +26,7 @@ RSpec.describe 'Create Tag', type: :request do
     let(:title) { '' }
 
     it 'it does not create tag' do
-      expect { post '/api/v1/tags', params: {title: title} }
+      expect { post '/api/v1/tags', params: params }
         .not_to change(Tag, :count)
 
       expect(response.status).to eq(422)

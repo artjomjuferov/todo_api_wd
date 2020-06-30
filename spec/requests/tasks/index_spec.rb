@@ -60,8 +60,12 @@ RSpec.describe 'Todos Index', type: :request do
     let!(:task_laundry) { create(:task, title: 'Wash Laundry', tags: [mom_tag]) }
     let!(:task_homework) { create(:task, title: 'Do Homework', tags: [urgent_tag]) }
 
+    let(:params) do
+      { data: { attributes: { tags: ['Urgent'] } } }
+    end
+
     it 'shows tags with provided tags only' do
-      get '/api/v1/tasks',  params: { tags: ['Urgent'] }
+      get '/api/v1/tasks',  params: params
 
       expect(response.status).to eq(200)
       expect(response.body).to have_json_size(1).at_path('data')
