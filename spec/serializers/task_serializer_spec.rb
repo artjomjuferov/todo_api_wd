@@ -10,9 +10,9 @@ RSpec.describe TaskSerializer, type: :serializer do
     names = %({"title":"Foo", "tags":[{"name":"Bar"}]})
     is_expected.to be_json_eql(names)
 
-    is_expected.to have_json_path("id")
-    is_expected.to have_json_type(Integer).at_path("id")
+    is_expected.to have_json_path('id')
+    is_expected.to have_json_type(Integer).at_path('id')
 
-    is_expected.to have_json_size(1).at_path("tags")
+    is_expected.to have_json_size(1).at_path('tags')
   end
 end
