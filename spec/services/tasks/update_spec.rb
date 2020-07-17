@@ -43,4 +43,29 @@ RSpec.describe Tasks::Update do
       expect(subject).to be_valid
     end
   end
+
+  context 'when update removed tags' do
+    let!(:removed_tag) { create(:tag, title: 'Removed', tasks: [task])}
+
+    it 'removes tag' do
+      expect { subject.call }
+        .to change { task.reload.tags.map(&:title).sort }.from(['Removed']).to(%w[Home Urgent])
+        .and change(Tag, :count).by(2)
+
+      expect(subject).to be_valid
+    end
+  end
+
+  context 'when update removed tags' do
+    let!(:removed_tag) { create(:tag, title: 'Removed', tasks: [task]) }
+    let!(:home_tag) { create(:tag, title: 'Home') }
+
+    it 'removes tag' do
+      expect { subject.call }
+        .to change { task.reload.tags.map(&:title).sort }.from(['Removed']).to(%w[Home Urgent])
+        .and change(Tag, :count).by(1)
+
+      expect(subject).to be_valid
+    end
+  end
 end
